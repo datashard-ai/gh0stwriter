@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="290" viewBox="0 0 1040 290" role="img" aria-label="How gh0stwriter works: record starts sox in the background, stop sends the audio to the AssemblyAI EU API, and the audio and the transcript are kept in a run folder on your Mac">
+<g font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<g fill="none" stroke="#808080" stroke-width="2">
+<rect x="41" y="41" width="218" height="96"/><rect x="411" y="41" width="218" height="96"/><rect x="781" y="41" width="218" height="96"/>
+<rect x="41" y="201" width="958" height="68"/>
+</g>
+<g fill="#ea0026"><rect x="41" y="41" width="14" height="14"/><rect x="411" y="41" width="14" height="14"/><rect x="781" y="41" width="14" height="14"/><rect x="41" y="201" width="14" height="14"/></g>
+<g font-size="17" font-weight="700" fill="#111111">
+<text x="150" y="78" text-anchor="middle">Your Mac</text><text x="520" y="78" text-anchor="middle">sox</text><text x="890" y="78" text-anchor="middle">AssemblyAI EU API</text>
+</g>
+<g font-size="13" fill="#555b63" text-anchor="middle">
+<text x="150" y="100">Microphone, or the other side</text><text x="150" y="119">of a call through BlackHole</text>
+<text x="520" y="100">Records in the background,</text><text x="520" y="119">in a process group of its own</text>
+<text x="890" y="100">Transcript with speaker labels</text><text x="890" y="119">English</text>
+</g>
+<g stroke="#808080" stroke-width="2" fill="#808080">
+<line x1="262" y1="89" x2="397" y2="89"/><polygon points="409,89 395,82 395,96" stroke="none"/>
+<line x1="632" y1="89" x2="767" y2="89"/><polygon points="779,89 765,82 765,96" stroke="none"/>
+<line x1="520" y1="139" x2="520" y2="187"/><polygon points="520,199 513,185 527,185" stroke="none"/>
+<line x1="890" y1="139" x2="890" y2="187"/><polygon points="890,199 883,185 897,185" stroke="none"/>
+</g>
+<g font-family="SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="12.5" fill="#ea0026" text-anchor="middle">
+<text x="335" y="76">gh0stwriter record</text><text x="705" y="76">gh0stwriter stop</text>
+</g>
+<g font-family="SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="12.5" fill="#555b63">
+<text x="532" y="170">audio.wav</text><text x="902" y="170">transcript.md</text>
+</g>
+<text x="520" y="228" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="14" font-weight="700" fill="#111111">~/gh0stwriter/2026-11-06-143000-weekly-sync/</text>
+<text x="520" y="251" text-anchor="middle" font-size="13" fill="#555b63">Nothing deletes the audio. If a step fails, it stays here and gh0stwriter transcribe tries again.</text>
+</g></svg>

@@ -18,13 +18,16 @@ All notable changes to gh0stwriter are recorded here. The format follows
   `GH0STWRITER_HOME`), with the audio, the transcript and sox's log. Folders are mode 0700 and files 0600.
 - **The audio is never deleted.** A failed upload, a failed transcription or a crash leaves the recording
   where it is, and `gh0stwriter transcribe <folder>` tries again. It also takes an audio file.
-- **Both sides of a call.** `--device NAME`, or `device` in `~/.config/gh0stwriter/config.toml`, records
-  from a named input such as an aggregate device built on BlackHole, so a call is recorded with the other
-  person's voice as well as yours.
+- **A named input to record from.** `--device NAME`, or `device` in `~/.config/gh0stwriter/config.toml`,
+  records from a named input, such as an aggregate device built on BlackHole, so that a call can be
+  recorded from both sides. The name reaches sox as `-t coreaudio NAME`. This has not been tried yet with
+  a real BlackHole setup: the recordings checked so far used a stand-in for the microphone.
 - **Transcripts with speaker labels**, from AssemblyAI's EU API with the `universal-2` model, written to
-  `transcript.md` and printed unless you pass `--quiet`.
+  `transcript.md` and printed unless you pass `--quiet`. Where AssemblyAI stores uploads made through its
+  EU endpoint is not confirmed, and AssemblyAI documents exceptions to EU residency: see Privacy in the
+  README before you use gh0stwriter for audio that must stay in the EU.
 - **A wait that scales with the audio**: 10 minutes plus half the length of the recording, checking every
-  3 seconds. A few failed checks in a row (a network error, a timeout, an HTTP 5xx or 429 reply) no longer
+  3 seconds. A few failed checks in a row (a network error, a timeout, an HTTP 5xx or 429 reply) do not
   abandon a job that AssemblyAI is already working on.
 - `gh0stwriter config` saves your AssemblyAI API key from standard input (`pbpaste | gh0stwriter config`)
   to a file only you can read; `ASSEMBLYAI_API_KEY` overrides it.

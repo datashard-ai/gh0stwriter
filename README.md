@@ -41,6 +41,8 @@
   four commands: <code>record</code>, <code>stop</code>, <code>transcribe</code> and <code>config</code>.
 </p>
 
+> **Before you rely on it:** your audio goes to AssemblyAI's EU API, but where AssemblyAI stores uploads made through that endpoint is not confirmed (see [Privacy](#privacy)). Recording both sides of a call has not been tried yet with a real BlackHole setup (see [Both sides of a call](#both-sides-of-a-call)).
+
 ## Quick start
 
 You need a Mac with Apple silicon, [Homebrew](https://brew.sh/), and an API key from [AssemblyAI](https://www.assemblyai.com/).
@@ -59,9 +61,9 @@ The installer downloads the release for your Mac, checks it against its publishe
 
 - **It keeps recording after the command returns.** `record` starts sox in a process group of its own and comes back at once, so the shell call that started it does not have to last as long as the meeting.
 - **It never deletes your audio.** A failed upload, a failed transcription or a crash leaves the recording where it is, and `transcribe` tries again.
-- **Both sides of a call.** Record from a named input, such as an aggregate device built on BlackHole, and the other person's voice is in the transcript as well as yours.
-- **Transcripts with speaker labels**, in English, from AssemblyAI's EU API, written to `transcript.md`.
-- **Private by default.** Folders are mode 0700 and files 0600, and the API key lives only in a file nobody else can read.
+- **A named input to record from.** Record from a named input, such as an aggregate device built on BlackHole, to capture the other person as well as yourself. This has not been tried yet with a real BlackHole setup (see [Both sides of a call](#both-sides-of-a-call)).
+- **Transcripts with speaker labels**, in English, from AssemblyAI's EU API, written to `transcript.md`. Where AssemblyAI stores uploads is not confirmed: see [Privacy](#privacy).
+- **Private by default.** Folders are mode 0700 and files 0600, and the API key is kept in a file only you can read (or in `ASSEMBLYAI_API_KEY`).
 - **Careful with processes.** gh0stwriter only signals a process it has confirmed is its own sox, and it refuses to start a second recording, or to transcribe one that may still be running.
 
 ## How it works
@@ -109,6 +111,8 @@ Both commands wait for AssemblyAI for up to 10 minutes plus half the length of t
 
 sox records one input. By default that is the microphone, so you record your own voice and nobody else's. To record both sides of a call, make the call's sound reach one input device.
 
+This setup has not been tried yet with a real BlackHole aggregate device. What has been checked is that the device name reaches sox as `-t coreaudio <name>`; the longer recordings so far used a stand-in for the microphone.
+
 1. Install a loopback driver once: `brew install blackhole-2ch`. gh0stwriter does not install BlackHole, or anything else, for you.
 2. In Audio MIDI Setup, make a Multi-Output device (your speakers plus BlackHole) and set it as the Mac's sound output.
 3. In Audio MIDI Setup, make an Aggregate device (your microphone plus BlackHole). This is the input to record from.
@@ -148,7 +152,7 @@ Folders are mode 0700 and files 0600. Nothing deletes a recording: failures leav
 
 ## Privacy
 
-Your audio and its transcript go to AssemblyAI's EU API, `api.eu.assemblyai.com`, and nowhere else; gh0stwriter has no server of its own and collects nothing. The upload returns a URL on `cdn.assemblyai.com`, which on Oct 27, 2026 resolved to an Amazon S3 `us-west-2` endpoint, against AssemblyAI's documented statement that audio and transcripts are stored in the endpoint region you select. Where uploads are stored is therefore unresolved. If your audio must not leave the EU, don't use gh0stwriter for it until AssemblyAI confirms in writing where uploads made through the EU endpoint are stored. Transcripts stay at AssemblyAI for 30 days unless they are deleted there, and gh0stwriter does not delete them.
+Your audio and its transcript go to AssemblyAI's EU API, `api.eu.assemblyai.com`. gh0stwriter sends them to no other service, has no server of its own and collects nothing. AssemblyAI documents exceptions to EU residency: its support staff outside the EU may access data for a support request, and file names may be processed by US subprocessors (gh0stwriter uploads the audio without a file name). The upload returns a URL on `cdn.assemblyai.com`, which on Oct 27, 2026 resolved to an Amazon S3 `us-west-2` endpoint, against AssemblyAI's documented statement that audio and transcripts are stored in the endpoint region you select. Where uploads are stored is therefore unresolved. If your audio must not leave the EU, don't use gh0stwriter for it until AssemblyAI confirms in writing where uploads made through the EU endpoint are stored. Transcripts stay at AssemblyAI for 30 days unless they are deleted there, and gh0stwriter does not delete them.
 
 The API key is never printed, never passed on a command line and never written anywhere but the config file. The only host gh0stwriter sends it to is AssemblyAI's EU API.
 

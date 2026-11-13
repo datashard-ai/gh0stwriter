@@ -6,6 +6,21 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-13
+
+### Fixed
+
+- **A recording no longer comes back as an empty transcript when the terminal app is not allowed the
+  microphone.** macOS gives such an app silence instead of an error, so a whole call used to be recorded,
+  uploaded and transcribed to nothing. `record` now listens to the first second: if the default input gave
+  only silence it stops sox and exits with code 4, naming the setting to change and, for a muted
+  microphone, the way out (unmute it, or name the input with `--device` to record anyway). A silent
+  `--device` only gets a warning, because a loopback device such as BlackHole is silent until something
+  plays; for an aggregate device that includes a microphone, the warning says your side of the call
+  may be missing. An input that sends no audio within 10 seconds also only gets a warning, since macOS may still be
+  asking whether to allow the microphone. `stop` and `transcribe` refuse a silent 16-bit WAV before
+  anything is uploaded (exit code 4) and keep the audio. Audio in any other format is sent as before.
+
 ## [0.1.0] - 2026-11-06
 
 ### Added
@@ -34,5 +49,6 @@ All notable changes to gh0stwriter are recorded here. The format follows
 - **Safe handling of the recording process.** gh0stwriter only signals a process it has confirmed is its own
   sox, and refuses to start a second recording or to transcribe a recording that may still be running.
 
-[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.1
 [0.1.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.0

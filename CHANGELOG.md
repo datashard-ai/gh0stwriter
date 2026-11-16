@@ -6,6 +6,39 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-16
+
+### Added
+
+- **A second engine that transcribes on your Mac.** `gh0stwriter config --engine local` makes it the one used from
+  now on, `--engine assemblyai|local` on `stop` and `transcribe` picks it for one run, and AssemblyAI stays the
+  default, so an install that changes nothing works as before. The local engine runs NVIDIA's Parakeet model on your
+  Mac's GPU: it needs no API key, sends nothing anywhere, and gives no speaker labels (the transcript has one
+  `[MM:SS] <sentence>` paragraph per sentence and ends with `Speakers: 0`). It reads 16 kHz mono 16-bit WAV, which is
+  what `record` writes; other audio is refused with the sox command that converts it. On a public 17-minute test
+  meeting it took about 16 seconds and made roughly 19 mistakes per 100 words with filler sounds ignored. It stays
+  within 6 GiB of memory.
+- **`gh0stwriter model`** downloads the local engine's speech model (2.3 GiB) once, checks it against a published
+  checksum, and carries on where it stopped if it is cut off.
+- **`gh0stwriter doctor`** lists what this Mac has and lacks (sox, the engine in use, the API key, the speech model
+  and the Metal kernels), with a `fix:` line under each problem, and exits 1 when something the chosen engine needs
+  is missing. It changes nothing and never prints the key.
+- **The installer asks which engine to use.** `install.sh` asks once on a terminal (1 for AssemblyAI, 2 for the local
+  engine, Enter to leave it as it is); with the local engine it then downloads the speech model. For a script, pass
+  `--engine assemblyai|local` and `--no-model`. Without a terminal and without options nothing about the engine
+  changes.
+
+### Changed
+
+- **A call is limited to 3 hours.** `record` stops at 3 hours, and the local engine refuses a longer recording and
+  keeps the audio; `--engine assemblyai` still takes it.
+- **The download is bigger: about 42 MB, where 0.1.1's was 1.2 MB.** The release now carries the Metal kernels the
+  local engine needs (`mlx.metallib`, installed beside the program).
+
+- **The next release needs macOS 14 or later.** On an older Mac the installer now stops before it downloads
+  anything and leaves the gh0stwriter you have where it is. Version 0.1.1 and earlier run on macOS 11 or
+  later; to install 0.1.1 on an older Mac, run the installer with `GH0STWRITER_VERSION=0.1.1`.
+
 ## [0.1.1] - 2026-11-13
 
 ### Fixed
@@ -49,6 +82,7 @@ All notable changes to gh0stwriter are recorded here. The format follows
 - **Safe handling of the recording process.** gh0stwriter only signals a process it has confirmed is its own
   sox, and refuses to start a second recording or to transcribe a recording that may still be running.
 
-[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.2.0
 [0.1.1]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.1
 [0.1.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.0

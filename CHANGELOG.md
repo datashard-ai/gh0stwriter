@@ -6,6 +6,68 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-19
+
+### Changed
+
+- **The call's speakers are found, not counted.** With the local engine, every two-track recording has the call's
+  track split into its speakers on your Mac, and the number of speakers is found by the model (up to 8); you no longer
+  say how many. NVIDIA's Nemotron 3 Diarization, run by NVIDIA's NeMo-Speech.cpp, replaces the earlier split. When it
+  finds one speaker, the call's track is `Others`. On the public meeting ES2004a it gave 86.6% of the words of the
+  call's track to the right speaker, where the earlier split gave 72.9%, and found the right number of speakers on the
+  meeting's official mix. A 3-hour two-track call peaked at 6.28 GB of memory on an Apple M5 Ultra; the check on a
+  16 GB Mac is still to be done.
+- **`--others N` is no longer needed.** `stop` and `transcribe` still accept it where the last release did, with the
+  local engine on a two-track recording, ignore the number and say so in one line. Where it was refused (AssemblyAI, a
+  recording with one track, an audio file) it is still refused.
+- **A two-track recording needs the speaker model: run `gh0stwriter model` after upgrading.** `stop` and `transcribe`
+  exit with code 2, naming `gh0stwriter model`, when it is missing, before anything is stopped, read or sent, and `record`
+  warns, with a `call_device` set, when it is not there yet. The installer runs `gh0stwriter model` itself when the engine
+  is already local. The command also checks the model file against its published checksum, and downloads it again,
+  keeping the old folder beside it, when it is not that file.
+- **A split that fails does not lose the transcript.** If the split of the call's track fails while it runs, the call's
+  track is labelled `Others`, one line on standard error says why, and the exit code is 0.
+- **`gh0stwriter model` downloads one speaker model, 102 MiB, in place of two (44 MiB).** `doctor` names it. The folder of
+  the old speaker models, `speakers-9403a690-0743f301`, in `~/.local/share/gh0stwriter/models/`, is not used any more and
+  not removed: delete it by hand if you want the space.
+- **NVIDIA's libraries ship in a folder, `gh0stwriter-lib/`, beside the program, which does not start without it.**
+  The installer puts it there and replaces it whole on each install; it tries the new program before it replaces the
+  old one, and puts the old one back if the new one does not run. ONNX Runtime and sherpa-onnx are gone from the program; the third-party notices
+  list what NVIDIA's libraries carry.
+
+## [0.3.0] - 2026-11-16
+
+### Added
+
+- **Record you and the call as two tracks.** Send the call's sound to BlackHole (a Multi-Output device of your
+  headphones and BlackHole as the Mac's output), set `call_device = "BlackHole 2ch"` in
+  `~/.config/gh0stwriter/config.toml` (or pass `record --call-device`), and `record` records your microphone and the
+  call's device side by side, in separate channels of one file. No Aggregate device is needed. `mic_channels` (1 by
+  default) and `call_channels` (2 by default, right for BlackHole 2ch) are the two devices' channels; `record` stops
+  with exit code 4 when the file has another count. Without `call_device` nothing changes: recording is one channel, as
+  before. If the microphone's channel is silent, `record` warns that your side of the call is not being recorded and
+  keeps recording. Wear headphones: over loudspeakers the microphone also hears the call, so the others' words appear
+  a second time, labelled `You`. The local engine labels your words `You` and the call's `Others`, and skips a track
+  that is silent throughout, saying so; the AssemblyAI engine is sent a mono mix in which both tracks weigh the same,
+  and keeps its own speaker labels. This has not been tried yet on a real call.
+- **`--others N` on `stop` and `transcribe`** says how many other people were on the call, and splits the call's track
+  into that many speakers on your Mac, with the local engine (`Speaker 1`, `Speaker 2` and so on). The number is
+  never guessed: without it the call is one speaker, `Others`. The split takes about 4 to 5 minutes for each hour
+  of call, before the transcription starts, and fewer speakers than you asked for may come back.
+- **`gh0stwriter speakers RUN`** lists a transcript's speakers with their first lines, and
+  `gh0stwriter speakers RUN you=us:Alice 1=client:Bob` names each one with a side (`us`, `client` or `other`, in any
+  case),
+  in `transcript.md`, which now has a `## Speakers` list above the transcript. Run it again to change a name. Nothing
+  about a voice is stored: the voices are compared only in memory, while one call is split, and no voiceprint is kept
+  or compared across calls.
+- **`gh0stwriter model` also downloads the two speaker models** (44 MiB, once), checked like the speech model, and
+  `doctor` says when they are missing. The local engine still works without them; it just cannot split a call.
+
+### Changed
+
+- **The program is bigger: about 34 MB, where it was about 17 MB.** ONNX Runtime, which tells the speakers apart, is
+  linked into it, so the download grows too. The third-party notices list what that adds.
+
 ## [0.2.0] - 2026-11-16
 
 ### Added
@@ -82,7 +144,9 @@ All notable changes to gh0stwriter are recorded here. The format follows
 - **Safe handling of the recording process.** gh0stwriter only signals a process it has confirmed is its own
   sox, and refuses to start a second recording or to transcribe a recording that may still be running.
 
-[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.0
+[0.3.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.3.0
 [0.2.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.2.0
 [0.1.1]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.1
 [0.1.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.1.0

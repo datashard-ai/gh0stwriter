@@ -79,8 +79,8 @@ saved_engine_is_local() {
   grep -qs '^engine[[:space:]]*=[[:space:]]*"local"' "${HOME:-/nonexistent}/.config/gh0stwriter/config.toml"
 }
 
-# get_models: runs `gh0stwriter model`, which downloads what the local engine needs and is not here yet (the speech model, and for a
-# call recorded as two tracks the speaker model), and does nothing for what is. It never fails the install.
+# get_models: runs `gh0stwriter model`, which downloads what the local engine needs and is not here yet (the speech model and the
+# speaker model, both needed for every recording), and does nothing for what is. It never fails the install.
 get_models() {
   if [ "$no_model" = yes ]; then
     say "Not downloading the speech model (--no-model). Before you use the local engine, run: gh0stwriter model"

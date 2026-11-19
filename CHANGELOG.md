@@ -6,6 +6,25 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-19
+
+### Changed
+
+- **A recording of one track has its speakers told apart.** With the local engine, a recording made without a
+  `call_device`, and an audio file given to `transcribe`, now have the speakers found on your Mac, and how many there are,
+  as the call's track of a two-track recording has: they are labelled `Speaker 1`, `Speaker 2` and so on, under a list of
+  them, and `gh0stwriter speakers` names them. There is no `You` on one track, since nothing tells your voice from the
+  rest, and one voice is `Speaker 1`, not `Others`. Before, such a transcript had no speaker labels. A 3-hour recording of
+  one track peaked at 6.29 GB of memory on an Apple M5 Ultra; the check on a 16 GB Mac is still to be done.
+- **Every local recording needs the speaker model: run `gh0stwriter model` after upgrading if you have only the speech
+  model.** `stop` and `transcribe` exit with code 2, naming `gh0stwriter model`, when it is missing, for one track as for
+  two, before anything is stopped, made, read or sent, and `record` and `config --engine local` warn, for every
+  recording with the local engine, when it is not there yet. `doctor` fails, with the local engine chosen, when it is missing, where it only warned. The
+  AssemblyAI engine is unchanged and needs no speaker model.
+- **A split that fails on one track does not lose the transcript.** The transcript is the plain one the last release
+  made, timed lines with no speakers, one line on standard error says that the speakers could not be told apart, and the
+  exit code is 0.
+
 ## [0.4.0] - 2026-11-19
 
 ### Changed
@@ -144,7 +163,8 @@ All notable changes to gh0stwriter are recorded here. The format follows
 - **Safe handling of the recording process.** gh0stwriter only signals a process it has confirmed is its own
   sox, and refuses to start a second recording or to transcribe a recording that may still be running.
 
-[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.1
 [0.4.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.0
 [0.3.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.3.0
 [0.2.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.2.0

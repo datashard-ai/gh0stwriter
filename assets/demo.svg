@@ -11,7 +11,7 @@
 <text x="24" y="157" fill="#7ee2a8">Saved the API key to /Users/you/.config/gh0stwriter/config.toml</text>
 <text x="24" y="199"><tspan fill="#ea0026">$</tspan><tspan fill="#f0f3f6"> gh0stwriter record --title "weekly sync"</tspan></text>
 <text x="24" y="220" fill="#b6c0cc">/Users/you/gh0stwriter/2026-11-06-143000-weekly-sync</text>
-<text x="24" y="241" fill="#8b96a3">Recording. Run `gh0stwriter stop` to finish.</text>
+<text x="24" y="241" fill="#8b96a3">Recording. Tell everyone on the call that it is being recorded. Run `gh0stwriter stop` to finish.</text>
 <text x="24" y="283"><tspan fill="#ea0026">$</tspan><tspan fill="#f0f3f6"> gh0stwriter stop</tspan></text>
 <text x="24" y="304" fill="#f0f3f6">## Transcript</text>
 <text x="24" y="346"><tspan fill="#8b96a3">[00:00]</tspan><tspan fill="#f0c674"> A:</tspan><tspan fill="#b6c0cc"> Thanks for joining. The first item is the launch date.</tspan></text>

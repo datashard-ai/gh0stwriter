@@ -6,6 +6,12 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-11-20
+
+### Changed
+
+- **`record` reminds you to tell everyone on the call that it is being recorded.**
+
 ## [0.4.1] - 2026-11-19
 
 ### Changed
@@ -163,7 +169,8 @@ All notable changes to gh0stwriter are recorded here. The format follows
 - **Safe handling of the recording process.** gh0stwriter only signals a process it has confirmed is its own
   sox, and refuses to start a second recording or to transcribe a recording that may still be running.
 
-[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/datashard-ai/gh0stwriter/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.2
 [0.4.1]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.1
 [0.4.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.4.0
 [0.3.0]: https://github.com/datashard-ai/gh0stwriter/releases/tag/v0.3.0

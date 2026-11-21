@@ -1,38 +1,46 @@
-# gh0stwriter in the menu bar
+# gh0stwriter Menu
 
-A [SwiftBar](https://github.com/swiftbar/SwiftBar) plugin that starts and stops gh0stwriter recordings and opens their transcripts. It only calls the `gh0stwriter` CLI and reads the run folders, so everything the CLI does (one recording at a time, never deleting audio, exit codes) still applies.
+A small macOS menu bar app that starts and stops gh0stwriter recordings and opens their transcripts. It only runs the `gh0stwriter` CLI and reads the run folders, so everything the CLI does (one recording at a time, never deleting audio, exit codes) still applies.
 
-## Install
+It is an app of its own, rather than a script in a menu bar tool, because macOS gives the microphone to the app that starts a recording, and only to an app that declares it uses the microphone. This one does, so macOS asks once and then lists it under System Settings > Privacy & Security > Microphone.
 
-You need gh0stwriter installed (see the main [README](../README.md#quick-start)), then:
+## Build and install
+
+You need gh0stwriter installed (see the main [README](../README.md#quick-start)), macOS 14 or later, and the Command Line Tools (`xcode-select --install`); Xcode itself is not needed.
 
 ```sh
-brew install --cask swiftbar
-mkdir -p ~/SwiftBar
-ln -sfn "$PWD/ui/gh0stwriter.5s.sh" ~/SwiftBar/gh0stwriter.5s.sh   # run from the repo root
-defaults write com.ameba.SwiftBar PluginDirectory "$HOME/SwiftBar"
-open -a SwiftBar
+ui/build.sh --install
 ```
 
-The link keeps the menu bar on the repo's copy, so a `git pull` updates it. To use a fixed copy instead, `cp` the file and `chmod +x` it. If SwiftBar opens a folder picker on its first launch, choose `~/SwiftBar`. The `.5s` in the file name makes the menu refresh every five seconds.
+This compiles `ui/Sources/`, puts `gh0stwriter Menu.app` in `ui/build/`, copies it to `~/Applications` and opens it. Without `--install` it only builds. The first time you start a recording, macOS asks whether gh0stwriter Menu may use the microphone: allow it.
 
-To add SwiftBar to the apps that open at login, use its own Preferences, or System Settings > General > Login Items.
+The app is signed ad hoc, which is enough to run it on the Mac that built it. Because that signature changes with each build, macOS may ask for the microphone again after a rebuild. Sharing the app with others would need a Developer ID signature and notarization.
 
-To remove it: delete `~/SwiftBar/gh0stwriter.5s.sh` (and `brew uninstall --cask swiftbar` if you no longer want SwiftBar). The plugin's state folder, `~/Library/Caches/gh0stwriter-swiftbar/`, can be deleted too.
+To remove it, choose **Quit gh0stwriter Menu**, turn off **Open at Login** first if you turned it on, and delete `~/Applications/gh0stwriter Menu.app`.
 
 ## The menu
 
 | State | Menu bar | Menu |
 | --- | --- | --- |
-| Idle | waveform icon | **Start recording…** (asks for a title), latest transcript, recent transcripts, recordings folder, doctor |
-| Recording | red dot and elapsed time | **Stop & transcribe** |
-| Transcribing | "Transcribing…" | — (the transcript opens by itself when it is ready) |
-| Failed | waveform icon | **Retry transcription** (runs `gh0stwriter transcribe` on the same run; the audio is kept) |
+| Idle | waveform icon | **Start Recording…** (asks for a title, optional) |
+| Recording | red dot and the elapsed time | **Stop & Transcribe** |
+| Transcribing | "Transcribing…" | the transcript opens in your text editor when it is ready |
+| Failed | warning icon | **Retry Transcription** (runs `gh0stwriter transcribe` on the same run; the audio is kept) |
 
-`Stop & transcribe` runs `gh0stwriter stop <run> --quiet` in the background, detached from SwiftBar, because it can take minutes. When it finishes you get a notification and `transcript.md` opens in your text editor. If it fails, an alert shows the last lines of the CLI's output.
+Always there: **Latest Transcript**, **Recent** (the last 8 transcripts), **Open Recordings Folder**, **Doctor** (shows `gh0stwriter doctor`), **Open at Login** and **Quit**.
 
-## Notes
+- **Start Recording…** runs `gh0stwriter record [--title TITLE]`. If it fails, an alert shows what the CLI printed and the exit code; for exit 4 (only silence), check the microphone permission above, or unmute the microphone.
+- **Stop & Transcribe** runs `gh0stwriter stop <run> --quiet` and waits for it, which can take minutes. If it fails, an alert shows the last lines the CLI printed.
+- A recording counts as running when the newest run folder has a `sox.pid` whose process is alive and is `sox`. A recording started in the terminal shows up in the menu too, and can be stopped there; one stopped in the terminal, or by `--minutes`, leaves the menu by itself.
 
-- **Microphone access.** macOS asks for it on behalf of SwiftBar, not your terminal. If the first recording fails with exit 4 (silence), allow SwiftBar under System Settings > Privacy & Security > Microphone.
-- A recording counts as running when the newest run folder has a `sox.pid` whose process is alive and is `sox`, so a recording started from the terminal shows up here too, and can be stopped here.
-- `GH0STWRITER_HOME` and `GH0STWRITER_INSTALL_DIR` are honoured if SwiftBar's environment sets them. The plugin keeps its own small state (the background job's pid, log and exit code) in `~/Library/Caches/gh0stwriter-swiftbar/`.
+## Settings
+
+The app looks for the CLI in `~/.local/bin` and the recordings in `~/gh0stwriter`. Apps started from the Finder do not see your shell's variables, so `GH0STWRITER_INSTALL_DIR` and `GH0STWRITER_HOME` apply only when they are in the app's environment (for example, when it is started with `open` from a shell that sets them). It adds `/opt/homebrew/bin` and `/usr/local/bin` to the PATH it gives the CLI, so that the CLI finds sox.
+
+## Files
+
+| File | What it is |
+| --- | --- |
+| `Sources/Gh0stwriterMenu.swift` | The whole app: SwiftUI `MenuBarExtra`, the run-folder reading, the CLI calls |
+| `Info.plist` | The bundle's settings: menu bar only (`LSUIElement`), the microphone usage text |
+| `build.sh` | Compiles with `swiftc`, assembles the bundle, signs it ad hoc, and with `--install` installs and opens it |

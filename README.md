@@ -224,7 +224,7 @@ With no names it prints each speaker, as `key: label`, and the speaker's first t
 
 ## From the menu bar
 
-`ui/gh0stwriter.5s.sh` is a [SwiftBar](https://github.com/swiftbar/SwiftBar) plugin that puts gh0stwriter in the menu bar: **Start recording…** (asks for a title), **Stop & transcribe** (with the elapsed time shown while it records), and your latest and recent transcripts, which open in your text editor. It only calls the commands above, so a recording started in the terminal shows up there too. See [ui/README.md](ui/README.md) to set it up. macOS asks for microphone access again, this time for SwiftBar.
+`ui/` holds **gh0stwriter Menu**, a small macOS menu bar app: **Start Recording…** (asks for a title), **Stop & Transcribe** (with the elapsed time shown while it records), and your latest and recent transcripts, which open in your text editor. It only runs the commands above, so a recording started in the terminal shows up there too. Build and install it with `ui/build.sh --install` (needs the Command Line Tools); see [ui/README.md](ui/README.md). macOS asks for the microphone once more, this time for gh0stwriter Menu.
 
 ## Where files go
 

@@ -31,6 +31,7 @@
   <a href="#commands">Commands</a> •
   <a href="#both-sides-of-a-call">Both Sides of a Call</a> •
   <a href="#using-it-with-claude-code-or-another-agent">With an Agent</a> •
+  <a href="#from-the-menu-bar">Menu Bar</a> •
   <a href="#where-files-go">Where Files Go</a> •
   <a href="#privacy">Privacy</a> •
   <a href="#troubleshooting">Troubleshooting</a>
@@ -220,6 +221,10 @@ With no names it prints each speaker, as `key: label`, and the speaker's first t
 `gh0stwriter record` returns within about a second and leaves sox running in a process group of its own, so the shell call that started it does not have to last as long as the meeting. We checked this with a 12-minute recording started from a Claude Code shell call: it was still running when that call had ended, and a later `gh0stwriter stop --quiet` finished it.
 
 `stop` and `transcribe` wait for the transcript, so run them in a terminal for a long call: Claude Code's shell tool gives up on a call after 2 minutes by default and 10 at most. If a call is cut off, the audio is kept, and `gh0stwriter transcribe <run>` tries again. Pass `--quiet` when an agent runs `stop` or `transcribe` and read `transcript.md` yourself: without it the whole transcript is printed into the agent's session. An agent that can run shell commands can also start a recording; which commands it may run is for its permission settings to decide.
+
+## From the menu bar
+
+`ui/` holds **gh0stwriter Menu**, a small macOS menu bar app: **Start Recording…** (asks for a title), **Stop & Transcribe** (with the elapsed time shown while it records), and your latest and recent transcripts, which open in your text editor. It only runs the commands above, so a recording started in the terminal shows up there too. Build and install it with `ui/build.sh --install` (needs the Command Line Tools); see [ui/README.md](ui/README.md). macOS asks for the microphone once more, this time for gh0stwriter Menu.
 
 ## Where files go
 

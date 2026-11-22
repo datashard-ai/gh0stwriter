@@ -6,6 +6,12 @@ All notable changes to gh0stwriter are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A menu bar app for gh0stwriter.** `ui/` holds gh0stwriter Menu, a small macOS app that starts and stops
+  recordings, shows how long the current one has run, and opens the latest and recent transcripts. Build it with
+  `ui/build.sh --install` (see [ui/README.md](ui/README.md)).
+
 ## [0.4.2] - 2026-11-20
 
 ### Changed
